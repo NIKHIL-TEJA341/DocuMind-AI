@@ -2,8 +2,9 @@ import os
 from agno.agent import Agent
 from agno.models.groq import Groq
 
-def generate_documentation(code_dict: dict, api_key: str) -> str:
+def generate_documentation(code_dict: dict) -> str:
     """Generate documentation from a dictionary of file paths and contents."""
+    api_key = os.getenv("GROQ_API_KEY")
     
     # Format the codebase context
     code_context = []
@@ -35,6 +36,7 @@ def generate_documentation(code_dict: dict, api_key: str) -> str:
     
     try:
         # Initialize Groq model using Agno
+        os.environ["GROQ_API_KEY"] = api_key
         groq_model = Groq(id="llama-3.3-70b-versatile", api_key=api_key)
         
         agent = Agent(

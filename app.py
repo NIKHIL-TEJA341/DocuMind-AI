@@ -78,11 +78,7 @@ with st.sidebar:
     st.caption("v1.0.4-stable")
     st.divider()
     
-    st.markdown("### Settings")
-    api_key = st.text_input("Groq API Key", type="password", value="", placeholder="gsk_...")
-    if not api_key:
-        st.warning("Please enter your Groq API Key to enable analysis.")
-        
+    # API key is managed securely in the backend
     st.divider()
     
     views = ["Dashboard", "Analysis Logs", "Documentation"]
@@ -125,8 +121,6 @@ if st.session_state.view == "Dashboard":
         if st.button("🪄 Scan Repository", type="primary"):
             if not repo_url:
                 st.error("Please enter a valid GitHub URL.")
-            elif not api_key:
-                st.error("Please provide a Groq API Key in the sidebar.")
             else:
                 st.session_state.extraction_source = ('github', repo_url)
                 st.session_state.view = "Analysis Logs"
@@ -144,8 +138,6 @@ if st.session_state.view == "Dashboard":
         if st.button("Scan Uploaded Files"):
             if not uploaded_files:
                 st.error("Please upload at least one file.")
-            elif not api_key:
-                st.error("Please provide a Groq API Key in the sidebar.")
             else:
                 st.session_state.extraction_source = ('files', uploaded_files)
                 st.session_state.view = "Analysis Logs"
@@ -159,8 +151,6 @@ if st.session_state.view == "Dashboard":
         if st.button("Scan ZIP Archive"):
             if not uploaded_zip:
                 st.error("Please upload a ZIP file.")
-            elif not api_key:
-                st.error("Please provide a Groq API Key in the sidebar.")
             else:
                 st.session_state.extraction_source = ('zip', uploaded_zip)
                 st.session_state.view = "Analysis Logs"
@@ -213,7 +203,7 @@ elif st.session_state.view == "Analysis Logs":
                     terminal_container.code(f"[INFO] Extraction complete. Found {file_count} valid files.\n[AI] Initializing Agno Agent with Groq (llama-3.3-70b)...\n[AI] Synthesizing documentation...", language="bash")
                     
                     # Generate documentation
-                    doc_result = agent.generate_documentation(code_dict, api_key)
+                    doc_result = agent.generate_documentation(code_dict)
                     
                     terminal_container.code("[SUCCESS] Documentation generated successfully.", language="bash")
                     
