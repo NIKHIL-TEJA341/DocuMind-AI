@@ -1,10 +1,19 @@
 import os
+import streamlit as st
 from agno.agent import Agent
 from agno.models.groq import Groq
 
 def generate_documentation(code_dict: dict) -> str:
     """Generate documentation from a dictionary of file paths and contents."""
     api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        try:
+            api_key = st.secrets["GROQ_API_KEY"]
+        except Exception:
+            pass
+            
+    if not api_key:
+        return "## Error Generating Documentation\n\nGroq API Key is missing. Please add it to your Streamlit App Secrets as instructed."
     
     # Format the codebase context
     code_context = []
