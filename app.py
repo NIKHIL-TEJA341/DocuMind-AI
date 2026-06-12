@@ -2,16 +2,14 @@ import streamlit as st
 import time
 import utils
 import agent
-
-# Page Configuration
+            
 st.set_page_config(
     page_title="DocuMind AI",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# Custom CSS for specific overrides (buttons, layout tweaks)
+                                                     
 st.markdown("""
     <style>
     .stButton>button {
@@ -48,10 +46,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-# ---------------------------------------------------------
-# Initialize Session State
-# ---------------------------------------------------------
+                                                                                  
 if 'view' not in st.session_state:
     st.session_state.view = "Dashboard"
 
@@ -69,17 +64,9 @@ if 'doc_content' not in st.session_state:
 
 if 'code_stats' not in st.session_state:
     st.session_state.code_stats = {"files": 0, "size": "0 KB"}
-
-# ---------------------------------------------------------
-# Sidebar
-# ---------------------------------------------------------
+                                                                   
 with st.sidebar:
     st.title("📂 DocuMind AI")
-    st.caption("v1.0.4-stable")
-    st.divider()
-    
-    # API key is managed securely in the backend
-    st.divider()
     
     views = ["Dashboard", "Analysis Logs", "Documentation"]
     current_index = views.index(st.session_state.view)
@@ -89,31 +76,19 @@ with st.sidebar:
         views,
         index=current_index
     )
-    
-    # If user clicks a different radio button, update session state and rerun
+                                                                      
     if view_selection != st.session_state.view:
         st.session_state.view = view_selection
         st.rerun()
     
-    st.divider()
-    st.caption("powered by")
-    st.markdown("**Groq | Agno AI | JetBrains**")
-
-
-# ---------------------------------------------------------
-# Main Content Area
-# ---------------------------------------------------------
 
 if st.session_state.view == "Dashboard":
-    
-    # Hero Section
-    st.markdown('<div class="center-div"><span class="badge">⚡ Powered by Agno + Groq</span></div>', unsafe_allow_html=True)
+
     st.markdown('<h1 class="main-title">Turn Code into Clarity. <span style="color: #00E85D;">Instantly.</span></h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">The AI-powered documentation engine for modern development teams.<br>Connect your repo and let DocuMind synthesize high-fidelity technical guides in seconds.</p>', unsafe_allow_html=True)
     
     st.write("---")
-    
-    # Input Area
+                
     col1, col2 = st.columns([3, 1])
     with col1:
         repo_url = st.text_input("🔗 GitHub Repository URL", placeholder="https://github.com/user/repo", label_visibility="collapsed")
@@ -128,8 +103,7 @@ if st.session_state.view == "Dashboard":
                 st.rerun()
 
     st.write("")
-    
-    # Upload Cards
+                  
     col3, col4 = st.columns(2)
     with col3:
         st.markdown("### 📄 Upload Files")
@@ -157,17 +131,13 @@ if st.session_state.view == "Dashboard":
                 st.session_state.is_analyzing = True
                 st.rerun()
 
-
 elif st.session_state.view == "Analysis Logs":
     st.header("Terminal - Analysis Log")
-    
-    # Layout for analysis view
+                            
     left_col, right_col = st.columns([2, 1])
     
     with left_col:
-        st.info("🟢 AI Engine Online - Ready to analyze.")
-        
-        # Terminal mock container
+        st.info("🟢 AI Engine Online - Ready to analyze.")                      
         terminal_container = st.empty()
         
         if st.session_state.is_analyzing:
@@ -176,7 +146,7 @@ elif st.session_state.view == "Analysis Logs":
                 code_dict = {}
                 
                 terminal_container.code("[INFO] Initializing extraction protocols...", language="bash")
-                time.sleep(1) # Small delay for UI effect
+                time.sleep(1)                            
                 
                 if source_type == 'github':
                     terminal_container.code(f"[INFO] Cloning repository: {source_data}\n[INFO] This may take a few moments...", language="bash")
@@ -200,9 +170,7 @@ elif st.session_state.view == "Analysis Logs":
                         "size": f"{total_size / 1024:.1f} KB"
                     }
                     
-                    terminal_container.code(f"[INFO] Extraction complete. Found {file_count} valid files.\n[AI] Initializing Agno Agent with Groq (llama-3.3-70b)...\n[AI] Synthesizing documentation...", language="bash")
-                    
-                    # Generate documentation
+                    terminal_container.code(f"[INFO] Extraction complete. Found {file_count} valid files.\n[AI] Initializing Agent ...\n[AI] Synthesizing documentation...", language="bash")           
                     doc_result = agent.generate_documentation(code_dict)
                     
                     terminal_container.code("[SUCCESS] Documentation generated successfully.", language="bash")
@@ -251,9 +219,7 @@ elif st.session_state.view == "Documentation":
             
         with main_doc:
             st.markdown("### PREVIEW | README.md")
-            st.info("✨ AI Generation Complete")
-            
-            # Display actual Markdown output
+            st.info("✨ AI Generation Complete")                          
             st.markdown(st.session_state.doc_content)
 
         with right_panel:
@@ -272,7 +238,7 @@ elif st.session_state.view == "Documentation":
                 mime="text/plain",
                 use_container_width=True
             )
-            st.button("📋 Copy to Clipboard", use_container_width=True) # Note: Clipboard button might not work inherently in standard Streamlit without custom components, kept for UI mock
+            st.button("📋 Copy to Clipboard", use_container_width=True)                                                                                                                     
             
             st.divider()
             
@@ -281,3 +247,4 @@ elif st.session_state.view == "Documentation":
                 st.session_state.analysis_complete = False
                 st.session_state.doc_content = ""
                 st.rerun()
+

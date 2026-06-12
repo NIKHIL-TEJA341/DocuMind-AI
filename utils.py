@@ -3,8 +3,7 @@ import zipfile
 import tempfile
 import subprocess
 from io import BytesIO
-
-# Allowed extensions to prevent massive binaries
+                                            
 ALLOWED_EXTENSIONS = {'.py', '.java', '.js', '.md', '.ts', '.tsx', '.jsx', '.html', '.css'}
 
 def is_allowed_file(filename: str) -> bool:
@@ -33,7 +32,7 @@ def extract_from_zip(uploaded_zip):
                         try:
                             code_dict[file_info.filename] = f.read().decode('utf-8')
                         except Exception:
-                            pass # Skip files that cannot be decoded as UTF-8
+                            pass                                             
     except Exception as e:
         code_dict['error.txt'] = f"Error extracting ZIP: {e}"
     return code_dict
@@ -42,29 +41,27 @@ def extract_from_github(repo_url):
     """Clone a GitHub repo to a temporary directory and extract code."""
     code_dict = {}
     with tempfile.TemporaryDirectory() as temp_dir:
-        try:
-            # Clone repo shallowly to save time
+        try:                                 
             subprocess.run(
                 ['git', 'clone', '--depth', '1', repo_url, temp_dir],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
-            for root, dirs, files in os.walk(temp_dir):
-                # skip .git folder
+            for root, dirs, files in os.walk(temp_dir):         
                 if '.git' in dirs:
                     dirs.remove('.git')
                 for file in files:
                     if is_allowed_file(file):
                         full_path = os.path.join(root, file)
                         rel_path = os.path.relpath(full_path, temp_dir)
-                        # Ensure we always use forward slashes for cross-platform consistency in output
+                                                                                                       
                         rel_path = rel_path.replace('\\', '/')
                         try:
                             with open(full_path, 'r', encoding='utf-8') as f:
                                 code_dict[rel_path] = f.read()
                         except Exception:
-                            pass # skip undecodable files
+                            pass                         
         except subprocess.CalledProcessError as e:
             code_dict['error.txt'] = f"Failed to clone repository: {e.stderr.decode('utf-8', errors='ignore')}"
         except Exception as e:

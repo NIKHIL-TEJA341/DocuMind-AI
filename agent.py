@@ -15,12 +15,12 @@ def generate_documentation(code_dict: dict) -> str:
     if not api_key:
         return "## Error Generating Documentation\n\nGroq API Key is missing. Please add it to your Streamlit App Secrets as instructed."
     
-    # Format the codebase context
+                                 
     code_context = []
     for filepath, content in code_dict.items():
         if filepath == 'error.txt':
             continue
-        # Truncate extremely large single files if needed (for safety)
+                                                                      
         if len(content) > 50000:
             content = content[:50000] + "\n...[TRUNCATED]"
             
@@ -43,25 +43,20 @@ def generate_documentation(code_dict: dict) -> str:
         "Do NOT include conversational filler. Just output the Markdown documentation directly."
     )
     
-    try:
-        # Initialize Groq model using Agno
+    try:                              
         os.environ["GROQ_API_KEY"] = api_key
         groq_model = Groq(id="llama-3.3-70b-versatile", api_key=api_key)
-        
         agent = Agent(
             model=groq_model,
             description=system_prompt,
             markdown=True,
         )
-        
-        # Enforce strict character limits for Groq free tiers (~12000 TPM limit)
-        # 25,000 characters is roughly 6,000 tokens, safely below the 12k TPM limit
+                                                                         
         if len(context_str) > 25000:
             context_str = context_str[:25000] + "\n\n...[CODEBASE TRUNCATED DUE TO GROQ FREE TIER LIMITS]"
-            
-        # We pass the codebase context as the user message
+                                                            
         prompt = "Please generate the comprehensive documentation for the following codebase:\n\n" + context_str
-        
+
         response = agent.run(prompt)
         return response.content
         
