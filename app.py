@@ -237,11 +237,8 @@ elif st.session_state.view == "Documentation":
                 file_name="README.txt",
                 mime="text/plain",
                 use_container_width=True
-            )
-            st.button("📋 Copy to Clipboard", use_container_width=True)                                                                                                                     
-            
+            )                                                                                                                  
             st.divider()
-            
             if st.button("New Analysis"):
                 st.session_state.view = "Dashboard"
                 st.session_state.analysis_complete = False
