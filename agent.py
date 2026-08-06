@@ -45,7 +45,7 @@ def generate_documentation(code_dict: dict) -> str:
     
     try:                              
         os.environ["GROQ_API_KEY"] = api_key
-        groq_model = Groq(id="llama-3.3-70b-versatile", api_key=api_key)
+        groq_model = Groq(id="openai/gpt-oss-120b", api_key=api_key)
         agent = Agent(
             model=groq_model,
             description=system_prompt,
